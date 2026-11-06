@@ -27,11 +27,30 @@ RepoRelief turns visible repository signals into a prioritized queue with file-l
 | Friction | What RepoRelief does |
 | --- | --- |
 | “I'll write the docs later” | Finds missing setup, usage and testing sections |
+| “Where does this documentation link go?” | Resolves relative Markdown links and reports missing targets with source lines |
 | “Where should I add tests?” | Flags modules without matching test filenames |
 | “I'm afraid to touch this file” | Highlights large modules and suggests characterization tests |
 | “What do I review?” | Builds a change checklist and lists matching tests from a Git diff |
 | “Checks only run on my machine” | Detects missing GitHub Actions workflows |
 | “Can we reuse this?” | Detects a missing root license |
+
+## Inspect a real finding before running anything
+
+Browse the [tiny fixture repository](examples/neglected-repo/) and its [generated Markdown report](examples/maintenance-plan.md).
+
+The fixture intentionally contains a broken link on line 4 of `docs/guide.md`:
+
+```text
+docs/guide.md:4: ./setup.md -> docs/setup.md
+```
+
+Fix it by restoring `docs/setup.md` or updating the link from the guide's directory.
+
+```bash
+node bin/reporelief.js examples/neglected-repo
+```
+
+Relative inline links, images and defined reference links are checked against the local path inventory. Query strings and fragments are stripped for path lookup; URL-encoded filenames are decoded. Directories count as existing targets. External URLs, root-relative paths, anchors, HTML links and fenced/inline code examples are not validated. This is a bounded Markdown heuristic, not a full CommonMark parser. Excluded files and directories can appear missing; no instruction correctness is inferred.
 
 ## Quick start
 

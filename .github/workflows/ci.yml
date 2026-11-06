@@ -22,4 +22,6 @@ jobs:
       - run: node bin/reporelief.js . --json
       - name: Verify shared browser engine
         shell: bash
-        run: diff src/analyze.js docs/analyze.js
+        run: |
+          diff src/analyze.js docs/analyze.js
+          diff src/markdown-links.js docs/markdown-links.js

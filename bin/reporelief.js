@@ -17,13 +17,17 @@ const directory = args[0] && !args[0].startsWith('-') ? args[0] : '.';
 const root = await realpath(resolve(directory));
 const ignored = new Set(['.git', 'node_modules', 'vendor', 'dist', 'build', 'coverage', '.next', '.venv', '__pycache__']);
 const files = {};
+const availablePaths = [];
 let bytes = 0;
 async function walk(relative = '') {
   for (const entry of await readdir(join(root, relative), { withFileTypes: true })) {
     const path = relative ? `${relative}/${entry.name}` : entry.name;
-    if (entry.isSymbolicLink() || ignored.has(entry.name) || /^\.env(?:\.|$)/.test(entry.name) || /\.(png|jpg|gif|zip|pdf|lock|woff2?)$/i.test(entry.name)) continue;
+    if (entry.isSymbolicLink() || ignored.has(entry.name) || /^\.env(?:\.|$)/.test(entry.name)) continue;
+    availablePaths.push(path);
+    if (availablePaths.length > 10000) throw new Error('Inventory limit exceeded (10,000 entries).');
     if (entry.isDirectory()) await walk(path);
     else if (entry.isFile()) {
+      if (/\.(png|jpg|gif|zip|pdf|lock|woff2?)$/i.test(entry.name)) continue;
       const { stat } = await import('node:fs/promises');
       if ((await stat(join(root, path))).size > 512000) continue;
       const buffer = await readFile(join(root, path));
@@ -38,6 +42,6 @@ try {
   await walk();
   const index = args.indexOf('--changed');
   const changed = index < 0 ? [] : execFileSync('git', ['diff', '--name-only', '-z', `${args[index + 1]}...HEAD`, '--'], { cwd: root, encoding: 'utf8', maxBuffer: 2000000 }).split('\0').filter(Boolean);
-  const report = analyze(files, changed);
+  const report = analyze(files, changed, availablePaths);
   console.log(args.includes('--json') ? JSON.stringify(report, null, 2) : toMarkdown(report));
 } catch (error) { console.error(`RepoRelief: ${error.message}`); process.exitCode = 1; }

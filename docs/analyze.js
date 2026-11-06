@@ -1,14 +1,22 @@
+import { missingMarkdownLinks } from './markdown-links.js';
+
 const sourcePattern = /\.(?:[cm]?[jt]sx?|py|go|rs|java|cs|cpp|c|h|rb|php|swift|kt)$/i;
 const testPattern = /(?:^|\/)(?:tests?|__tests__|spec)(?:\/|\.)|(?:[._-](?:test|spec))\.[^.]+$|_test\.go$/i;
 const stem = path => path.split('/').at(-1).replace(/\.[^.]+$/, '').replace(/[._-](test|spec)$/, '');
 
-export function analyze(files, changed = []) {
+export function analyze(files, changed = [], availablePaths = Object.keys(files)) {
   const entries = Object.entries(files).map(([path, content]) => [path.replaceAll('\\', '/').replace(/^\.\//, ''), content]);
   const paths = entries.map(([path]) => path);
   const tests = paths.filter(path => testPattern.test(path));
   const sources = entries.filter(([path]) => sourcePattern.test(path) && !testPattern.test(path));
   const findings = [];
   const add = (id, priority, title, evidence, action) => findings.push({ id, priority, title, evidence, action });
+  for (const link of missingMarkdownLinks(entries, availablePaths)) {
+    add(`docs.link:${link.source}:${link.line}:${link.target}`, 'medium',
+      'Repair a missing local Markdown target',
+      [`${link.source}:${link.line}: ${link.destination} -> ${link.target}`],
+      'Restore the target or update the link relative to the source file directory. Only local path existence is checked.');
+  }
   const readme = entries.find(([path]) => /^readme(?:\.md|\.rst|\.txt)?$/i.test(path));
   if (!readme) add('docs.readme', 'high', 'Add a project entry point', ['No root README found'], 'Document purpose, setup, one runnable example and the test command.');
   else {
@@ -34,7 +42,7 @@ export function analyze(files, changed = []) {
     summary: { files: paths.length, sourceFiles: sources.length, testFiles: tests.length, findings: findings.length },
     findings,
     changePlan: { changed: [...changedSet], relatedTests, checklist: changedSet.size ? ['Explain the user-visible behavior change.', 'Verify failure paths and backward compatibility.', 'Run relevant tests, then the project check suite.', 'Update documentation and record rollback steps.'] : [] },
-    limitations: ['Static heuristics only; no code execution, semantic call graph or measured test coverage.', 'Only supplied text files are analyzed. Review recommendations before applying changes.']
+    limitations: ['Static heuristics only; no code execution, semantic call graph or measured test coverage.', 'Only supplied text files are analyzed. Review recommendations before applying changes.', 'Markdown links: bounded inline/reference syntax only; no external URL, anchor, HTML link or instruction validation. Missing targets may be excluded from the supplied inventory.']
   };
 }
 
