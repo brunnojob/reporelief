@@ -23,10 +23,14 @@ Choose and add a license appropriate to the project.
 ## Change review
 
 
-Related tests (filename heuristic):
+Related tests (filename and directory heuristic):
+
+- No related tests identified.
 
 ## Limits
+
 - Static heuristics only; no code execution, semantic call graph or measured test coverage.
 - Only supplied text files are analyzed. Review recommendations before applying changes.
+- Test matching uses filenames and conventional directory layouts. Shared integration tests, custom layouts and multiple source files with the same module key may require manual review.
 - Markdown links: bounded inline/reference syntax only; no external URL, anchor, HTML link or instruction validation. Missing targets may be excluded from the supplied inventory.
 
