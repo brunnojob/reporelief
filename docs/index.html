@@ -1,7 +1,40 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Turn repository maintenance into an evidence-based action plan. Local-first, no account required."><title>RepoRelief — Less upkeep. More shipping.</title><link rel="stylesheet" href="style.css"><link rel="icon" href="assets/icon.svg"></head><body><header><a class="brand" href="./">r/ <strong>RepoRelief</strong></a><nav><a href="https://github.com/brunnojob/reporelief">Source ↗</a><a href="https://buymeacoffee.com/brunnodev">Support</a></nav></header><main><section class="hero"><span class="eyebrow">THE MAINTENANCE WORKBENCH / v1.0</span><h1>Less upkeep.<br><em>More shipping.</em></h1><p>Turn “I'll document it later” into a concrete plan.<br>Find the gaps. Understand the evidence. Pick your next move.</p><div class="actions"><button id="demo">Run sample audit ↗</button><label class="upload">Open local folder<input id="folder" type="file" webkitdirectory multiple></label></div><p class="small">Local files stay in your browser. No account, API key or AI service.</p></section><section class="workbench"><div class="bar"><span>WORKBENCH / <span id="mode">SAMPLE REPOSITORY</span></span><span class="live">● LOCAL ENGINE</span></div><div class="metrics" id="metrics"></div><div class="toolbar"><h2>Maintenance queue</h2><label>Priority <select id="priority"><option value="all">All findings</option><option>high</option><option>medium</option><option>low</option></select></label><button id="export">Export plan ↓</button></div><p id="status" role="status"></p><div id="findings"></div><details><summary>What this audit can tell you</summary><p>Static rules detect missing relative Markdown targets with source lines, README sections, workflow and license files, large modules, maintenance markers and matching test filenames. This is not measured test coverage or semantic dependency analysis. Generated plans need maintainer review.</p></details></section><section class="bottom"><div><span class="eyebrow">BUILT FOR YOUR TERMINAL TOO</span><h2>One command.<br>A smaller backlog.</h2></div><pre>git clone https://github.com/brunnojob/reporelief.git
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Turn repository maintenance into an evidence-based action plan. Try an interactive example before opening a local folder.">
+  <title>RepoRelief — Less upkeep. More shipping.</title>
+  <link rel="stylesheet" href="style.css?v=20261115-demo">
+  <link rel="icon" href="assets/icon.svg">
+</head>
+<body>
+  <a class="skip-link" href="#workbench" data-i18n="skip"></a>
+  <header><a class="brand" href="./">r/ <strong>RepoRelief</strong></a><nav aria-label="Main navigation" data-i18n-aria-label="navigation"><label class="language"><span class="sr-only" data-i18n="language"></span><select id="language" aria-label="Language" data-i18n-aria-label="language"><option value="pt-BR">PT-BR</option><option value="en">EN</option></select></label><a href="https://github.com/brunnojob/reporelief" data-i18n="source"></a><a href="https://buymeacoffee.com/brunnodev" data-i18n="support"></a></nav></header>
+  <main>
+    <section class="hero"><span class="eyebrow" data-i18n="eyebrow"></span><h1><span data-i18n="headline1"></span><br><em data-i18n="headline2"></em></h1><p data-i18n="intro"></p><div class="actions"><button id="demo" data-i18n="runDemo"></button><label class="upload"><span data-i18n="openFolder"></span><input id="folder" type="file" webkitdirectory multiple aria-label="Open local folder" data-i18n-aria-label="openFolder"></label></div><p class="small" data-i18n="privacy"></p></section>
+    <section class="workbench" id="workbench" aria-label="Maintenance workbench" data-i18n-aria-label="workbenchLabel">
+      <div class="bar"><span><span data-i18n="workbench"></span> / <span id="mode"></span></span><span class="live" data-i18n="localEngine"></span></div>
+      <section id="demo-panel" class="demo-panel" aria-labelledby="demo-title">
+        <div class="demo-heading"><div><span class="eyebrow" data-i18n="demoEyebrow"></span><h2 id="demo-title" data-i18n="demoTitle"></h2><p data-i18n="demoIntro"></p></div><button id="reset-demo" class="quiet" data-i18n="restart"></button></div>
+        <ol class="demo-guide"><li data-i18n="guide1"></li><li data-i18n="guide2"></li><li data-i18n="guide3"></li></ol>
+        <div class="demo-grid"><div><h3 data-i18n="exampleFiles"></h3><label class="sr-only" for="sample-file" data-i18n="selectFile"></label><select id="sample-file"></select><pre id="sample-source" tabindex="0" aria-label="Sample file contents" data-i18n-aria-label="fileContents"></pre><p class="small" data-i18n="sampleNote"></p></div><div><h3 data-i18n="tryChanges"></h3><div id="demo-fixes"></div><p id="demo-progress" role="status"></p></div></div>
+        <div class="demo-handoff"><p data-i18n="ready"></p><button id="open-folder-demo" class="quiet" data-i18n="openFolder"></button></div>
+      </section>
+      <div class="metrics" id="metrics"></div>
+      <div class="toolbar"><h2 data-i18n="queue"></h2><label><span data-i18n="priority"></span> <select id="priority"><option value="all" data-i18n="all"></option><option value="high" data-i18n="high"></option><option value="medium" data-i18n="medium"></option><option value="low" data-i18n="low"></option></select></label><button id="rerun" class="quiet" data-i18n="rerun"></button><button id="export" data-i18n="export"></button></div>
+      <p id="status" role="status" aria-live="polite"></p><div id="findings"></div>
+      <details><summary data-i18n="limitsTitle"></summary><p data-i18n="limitsBody"></p></details>
+    </section>
+    <section class="bottom"><div><span class="eyebrow" data-i18n="terminal"></span><h2><span data-i18n="terminal1"></span><br><span data-i18n="terminal2"></span></h2></div><pre><code>git clone https://github.com/brunnojob/reporelief.git
 cd reporelief
 node bin/reporelief.js /path/to/project
 
-# JSON output or a review checklist
+<span data-i18n="cliComment"></span>
 node bin/reporelief.js . --json
-node bin/reporelief.js . --changed main</pre></section></main><footer>Open source. MIT licensed. Built by <a href="https://brunnodev.store">brunnodev.store</a><span>Evidence over guesswork.</span></footer><script type="module" src="app.js"></script></body></html>
+node bin/reporelief.js . --changed main</code></pre></section>
+  </main>
+  <footer><div><span data-i18n="credits"></span> <a href="https://brunnodev.store">brunnodev.store</a></div><span data-i18n="motto"></span></footer>
+  <script type="module" src="app.js?v=20261115-demo"></script>
+</body>
+</html>

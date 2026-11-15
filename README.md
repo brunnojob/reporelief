@@ -116,7 +116,11 @@ For reproducible integrations, pin the tool checkout to a reviewed commit SHA. K
 
 ## Browser workbench
 
-[Launch the live workbench](https://brunnojob.github.io/reporelief/). Run the labeled sample or select a local folder, filter by priority and export the plan. Selected files are processed in the browser without uploading them. Directory selection works in browsers supporting `webkitdirectory`.
+[Launch the live workbench](https://brunnojob.github.io/reporelief/). Choose **English or PT-BR**; the interface, findings, recommendations, messages and Markdown export follow the selected language. The preference is saved in your browser.
+
+Start with **Run sample audit** before selecting a folder. Inspect fictional files with line numbers, apply five in-memory example changes, and watch the same audit engine recalculate the findings. Restore documentation, add a matching test file, add CI and a license, or track a maintenance marker. Restart the example at any time. Sample files are displayed as original English source and are never executed. A disappearing signal demonstrates a rule, not proof of correctness, working CI or measured test coverage.
+
+Then select a local folder, filter by priority, rerun its audit or export the plan. Selected files are processed in the browser without uploading them. Directory selection works in browsers supporting `webkitdirectory`.
 
 GitHub READMEs do not run JavaScript or arbitrary iframe embeds, so the README embeds the animated preview and live workflow badges; the interactive tool lives on Pages.
 
